@@ -30,7 +30,7 @@ jobs:
       id: setup
       uses: hashicorp/setup-terraform@v2
       with:
-        cli_config_credentials_token: "CBHI4oz2QCDYFA.atlasv1.QzVDzQlGOzjuUwomoHyOkFpADLWX1rDLQGZWki1yYxAY3aQr2cte8L0uHcjd80nwqLQ"
+        cli_config_credentials_token: "${{ secrets.tf_token }}"
         terraform_wrapper: false
 
     - name: Terraform Init

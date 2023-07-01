@@ -7,3 +7,4 @@ db_proxy.log
 translate.log
 *.hcl
 *.terraform
+*.tfstate
