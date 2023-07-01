@@ -1,0 +1,43 @@
+name: Deploy Terraform
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'terraform/**'
+
+
+jobs:
+  #Apply of Terraform code infrastructure
+  terraform:
+    name: 'Terraform deploy'
+    runs-on: ubuntu-latest
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    environment: Production
+
+    defaults:
+      run:
+        working-directory: terraform
+        shell: bash
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Setup Terraform
+      id: setup
+      uses: hashicorp/setup-terraform@v2
+      with:
+        cli_config_credentials_token: "CBHI4oz2QCDYFA.atlasv1.QzVDzQlGOzjuUwomoHyOkFpADLWX1rDLQGZWki1yYxAY3aQr2cte8L0uHcjd80nwqLQ"
+        terraform_wrapper: false
+
+    - name: Terraform Init
+      id: init
+      run: terraform init
+
+    - name: Terraform Apply
+      id: apply
+      run: |
+        terraform apply -auto-approve
