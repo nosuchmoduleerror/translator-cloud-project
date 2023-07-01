@@ -62,7 +62,7 @@ resource "aws_s3_bucket_cors_configuration" "translator_website_bucket_bucketCOR
 
 resource "aws_s3_object" "website_files" {
   for_each     = fileset("./website/", "**")
-  bucket       = "cloud-translator.com2"
+  bucket       = aws_s3_bucket.translator_bucket.id
   key          = each.value
   source       = "./website/${each.value}"
   etag         = filemd5("./website/${each.value}")
