@@ -1,8 +1,15 @@
 from neo4j import GraphDatabase, basic_auth
+import socket
+import os
 
 def lambda_handler(event,context):
-    endpoint = 'neo4j://' + '10.0.146.95' + ':7687'
-    driver = GraphDatabase.driver(endpoint, auth=basic_auth("neo4j", "password"), encrypted=False)#PROD
+    
+    region = os.environ['AWS_REGION']
+    password = os.environ['neo4j_password']
+    user = os.environ['neo4j_user']
+    
+    endpoint = "neo4j+s://7abfe6cc.databases.neo4j.io"
+    driver = GraphDatabase.driver(endpoint, auth=basic_auth(user, password))#PROD
     
     _from = event["from"]
     to = event["to"]
@@ -10,6 +17,8 @@ def lambda_handler(event,context):
     to_text = event["to_text"]
     _id = event["id"]
     addr = event["fingerprint"]
+        
+    
         
     params = {
         'from': _from,
@@ -42,5 +51,6 @@ def lambda_handler(event,context):
     except Exception as e:
         driver.close()
         return str(e), endpoint
+
     finally:
         driver.close()

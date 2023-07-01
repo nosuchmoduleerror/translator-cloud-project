@@ -26,6 +26,14 @@ variable "AWS_SECRET_ACCESS_KEY" {
   type = string
   description = "secret access key"
 }
+variable "NEO4J_USER" {
+  type = string
+  description = "user for neo4j db"
+}
+variable "NEO4J_PASSWORD" {
+  type = string
+  description = "password for neo4j db"
+}
 provider "aws" {
   region     = "us-west-1"
   access_key = var.AWS_ACCESS_KEY_ID
@@ -85,6 +93,13 @@ resource "aws_lambda_function" "insert-bad-translation" {
   runtime                        = "python3.10"
   depends_on                     = [aws_iam_role_policy_attachment.attach_iam_policy_to_iam_role]
   layers                         = [aws_lambda_layer_version.my_layer.arn]
+
+  environment {
+    variables = {
+      neo4j_user = var.NEO4J_USER
+      neo4j_password  = var.NEO4J_PASSWORD
+    }
+  }
 }
 
 # insert-possible-better-translation
@@ -102,6 +117,13 @@ resource "aws_lambda_function" "insert-possible-better-translation" {
   runtime                        = "python3.10"
   depends_on                     = [aws_iam_role_policy_attachment.attach_iam_policy_to_iam_role]
   layers                         = [aws_lambda_layer_version.my_layer.arn]
+  
+  environment {
+    variables = {
+      neo4j_user = var.NEO4J_USER
+      neo4j_password  = var.NEO4J_PASSWORD
+    }
+  }
 }
 
 # read-bad-translations
@@ -119,6 +141,13 @@ resource "aws_lambda_function" "read-bad-translations" {
   runtime                        = "python3.10"
   depends_on                     = [aws_iam_role_policy_attachment.attach_iam_policy_to_iam_role]
   layers                         = [aws_lambda_layer_version.my_layer.arn]
+
+  environment {
+    variables = {
+      neo4j_user = var.NEO4J_USER
+      neo4j_password  = var.NEO4J_PASSWORD
+    }
+  }
 }
 
 # read-possible-better-translation-by-id
@@ -136,6 +165,13 @@ resource "aws_lambda_function" "read-possible-better-translation-by-id" {
   runtime                        = "python3.10"
   depends_on                     = [aws_iam_role_policy_attachment.attach_iam_policy_to_iam_role]
   layers                         = [aws_lambda_layer_version.my_layer.arn]
+
+  environment {
+    variables = {
+      neo4j_user = var.NEO4J_USER
+      neo4j_password  = var.NEO4J_PASSWORD
+    }
+  }
 }
 
 # vote-possible-better-translation
@@ -153,6 +189,13 @@ resource "aws_lambda_function" "vote-possible-better-translation" {
   runtime                        = "python3.10"
   depends_on                     = [aws_iam_role_policy_attachment.attach_iam_policy_to_iam_role]
   layers                         = [aws_lambda_layer_version.my_layer.arn]
+
+  environment {
+    variables = {
+      neo4j_user = var.NEO4J_USER
+      neo4j_password  = var.NEO4J_PASSWORD
+    }
+  }
 }
 
 

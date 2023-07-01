@@ -1,9 +1,14 @@
 from neo4j import GraphDatabase, basic_auth
+import os
 
 def lambda_handler(event,context):
     
-    endpoint = 'neo4j://' + '10.0.146.95' + ':7687'
-    driver = GraphDatabase.driver(endpoint, auth=basic_auth("neo4j", "password"), encrypted=False)#PROD
+    region = os.environ['AWS_REGION']
+    password = os.environ['neo4j_password']
+    user = os.environ['neo4j_user']
+    
+    endpoint = "neo4j+s://7abfe6cc.databases.neo4j.io"
+    driver = GraphDatabase.driver(endpoint, auth=basic_auth(user, password))#PROD
     
     fid = event['fid']
     second_id = event['secondid']
@@ -11,6 +16,7 @@ def lambda_handler(event,context):
     to_text = event["to_text"]
     addr = event["fingerprint"]
     
+        
     params = {
         'fid': fid,
         'second_id': second_id,
@@ -18,6 +24,8 @@ def lambda_handler(event,context):
         'to_text': to_text,
         'addr': addr
     }
+    
+    
     
     try:
         session = driver.session()
@@ -30,6 +38,8 @@ def lambda_handler(event,context):
         
         cypher = """MERGE (:User {ip: $addr})"""
         session.run(cypher, params)
+    
+
         cypher = """ MATCH (u:User)
                     MATCH (better:BetterTranslation)
                     WHERE better.id = $second_id AND u.ip = $addr
@@ -43,6 +53,7 @@ def lambda_handler(event,context):
                     MERGE (bad)-[:IMPROVED_BY]->(better)
                     """
         session.run(cypher, params)
+        
         return "all good"
 
     except Exception as e:

@@ -1,14 +1,21 @@
 from neo4j import GraphDatabase, basic_auth
+import os
 
 def lambda_handler(event,context):
     
-    endpoint = 'neo4j://' + '10.0.146.95' + ':7687'
-    driver = GraphDatabase.driver(endpoint, auth=basic_auth("neo4j", "password"), encrypted=False)#PROD
+    region = os.environ['AWS_REGION']
+    password = os.environ['neo4j_password']
+    user = os.environ['neo4j_user']
+    
+    endpoint = "neo4j+s://7abfe6cc.databases.neo4j.io"
+    driver = GraphDatabase.driver(endpoint, auth=basic_auth(user, password))#PROD
+    
     page =  event["page"]
-
+    
     params = {
         'page': page
     }
+    
     try:
         session = driver.session()
         cypher = """ MATCH (b:BadTranslation)-[:REPORTED_BY]->(u:User)
@@ -32,3 +39,4 @@ def lambda_handler(event,context):
         return str(e)
     finally:
         driver.close()
+    
