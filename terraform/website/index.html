@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description"
+    content="Website for a translator. This is a universitary project for the exam Cloud Computing, University of Pavia, Italy">
+  <title>Cloud Translator</title>
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
+</head>
+
+<link rel="stylesheet" href="./static/css/index.css">
+</link>
+
+
+<body>
+  <ul class="topnav">
+    <li><a class="logo" title="Home" href="./index.html"><img src="./static/res/logoCloudTranslatorSvg.svg"></a></li>
+    <li><a class="active" href="./index.html"><img src="./static/res/home-2-line-white.png" class="navbar-image">&nbsp;Home</a></li>
+    <li><a href="./community.html"><img src="./static/res/team-line.png" class="navbar-image">&nbsp;Community</a></li>
+    <li class="right"><a href="./about.html"><img src="./static/res/information-line.png" class="navbar-image">&nbsp;About</a></li>
+  </ul>
+
+  <div class="short-bio">
+    <p>
+      This translator is a university project. <br>Created by 5 students of the master's degree in Computer Engineering
+      at the <a href="https://web.unipv.it/" class="aliceblue">University of Pavia</a>, Italy.
+      <br>It is based on the open-source project <a href="https://www.argosopentech.com/" class="aliceblue">Argos
+        Translate</a> , that is, a Python library base on <a href="https://opennmt.net/" class="aliceblue">OpenNMT</a>.
+    </p>
+  </div>
+
+  <div class="complex">
+    <p class="selects_line">
+
+      <select id="from" name="from" class="from" data-placeholder="Choose a Language...">
+        <option value="en">English</option>
+        <option selected value="it">Italian</option>
+      </select>
+
+      <button type="button" name="invert" id="invert" class="button"><img src="./static/res/arrow-left-right-fill.png" class="button-image">
+        <img src="./static/res/arrow-left-right-fill-hover.png" class="button-hover-image"></button>
+      </button>
+
+      <select id="to" name="to" class="to" data-placeholder="Choose a Language...">
+        <option selected value="en">English</option>
+        <option value="it">Italian</option>
+      </select>
+    </p>
+
+    <p class="textareas_line">
+      <textarea id="from_text" name="from_text"></textarea>
+      <span class="vertical_buttons">
+        <button id="button_speak_from" class="speaker"><img src="./static/res/volume-up-line.png"></button>
+        <button id="button_paste_from"><img src="./static/res/clipboard-line.png"></button>
+      </span>
+
+      <textarea readonly id="to_text" class="to_text" name="to_text"></textarea><br>
+      <span class="vertical_buttons">
+        <button id="button_speak_to" class="speaker"><img src="./static/res/volume-up-line.png"></button>
+        <button id="button_copy_to"><img src="./static/res/file-copy-line.png"></button>
+        <button id="button_query_to_db"><img src="./static/res/emotion-sad-line.png"></button>
+      </span>
+    </p>
+    <button id="translate" class="button" name="translate"><img src="./static/res/translate.png" class="button-image">
+      <img src="./static/res/translate-hover.png" class="button-hover-image"></button>
+  </div>
+
+  <footer id="footer">
+    <span>
+      <p>
+        <a href="https://web.unipv.it/" class="aliceblue">Università degli Studi di Pavia</a>
+        <br>
+        Cloud Computing Project UNIPV © 2022/2023
+      </p>
+    </span>
+  </footer>
+
+</body>
+
+<script type="module" src="./static/scripts/index.js"></script>
+
+</html>

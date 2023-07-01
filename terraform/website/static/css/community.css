@@ -1,0 +1,116 @@
+.big-list{
+    position: relative;
+    width: 90%;
+    left: 5%;
+    margin-bottom: 5%;
+    margin-top: 5%;
+    font-size: larger;
+}
+
+.item{
+    padding: 1%;
+    background-color:rgb(35 71 163 / 50%);
+    font-size: larger;
+    border-radius: 15px;
+    box-shadow: 10px 10px 30px rgb(35 71 163 / 50%);
+    margin-top: 2%;
+    margin-bottom: 2%;
+}
+
+ul{
+    list-style: none;
+}
+
+summary {
+  display: flex;
+  justify-content: flex-start;
+  cursor: pointer;
+  padding: 1em .5em;
+  list-style: none;
+}
+
+details summary::-webkit-details-marker {
+  display:none;
+}
+
+summary .complaints{
+    margin-right: 1%;
+    font-size: 0.7em;
+    text-align: center;
+    padding: 1%;
+    border-radius: 15px;
+    background-color:rgba(35, 71, 163, 0.8);
+    align-items: center;
+    border: 2px solid #000;
+    box-sizing: border-box;
+    color: #fff;
+}
+
+.possible-translations-area {
+  display: flex;
+  align-items:center;
+  margin-left: 30%;
+  justify-content: flex-start;
+  margin-top: 1%;
+}
+
+.possible-translation-el {
+  position: relative;
+  padding: 1%;
+  border-radius: 15px;
+  background-color:rgba(35, 71, 163, 0.8);
+  align-items: center;
+  margin: 1%;
+  color: #fff;
+  border: 2px solid #000;
+  display: flex;
+  justify-content: space-between;
+}
+
+.votes-plus-button{
+  color: #000;
+  min-width: 50px;
+  border-radius: 50%;
+  margin-left: 8%;
+}
+
+.right-votes {
+  min-width: 15%;
+}
+
+.pressed{
+  box-shadow: inset 5px 5px 10px #777;
+  transform: translateY(1px);
+  background: #e5e5e5;
+}
+
+.possible-translations-area textarea{
+    padding: 1%;
+    border: 2px solid #000;
+    border-radius: 15px;
+    min-width: 60%;
+    font-family: Quicksand;
+    font-size: 20px;
+    resize: none;
+    margin-right: 1%;
+}
+
+.possible-translations-area button#possible-translations-button{
+  border-radius: 15px;
+  font-family: Quicksand;
+  font-size: 20px;
+  height: 3.5em;
+  min-width: 70px;
+}
+
+#get-new-data, #get-new-proposals {
+  position: relative;
+  width: 10%;
+  left: 45%; right: 45%;
+  margin: 2% 0 5% 0;
+}
+
+.complaints-image {
+  width: 20px;
+  height: 20px;
+}

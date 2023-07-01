@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Website for a translator. This is a universitary project for the exam Cloud Computing, University of Pavia, Italy">
+  <title>Cloud Translator</title>
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
+</head>
+
+<link rel="stylesheet" href="./static/css/index.css"></link>
+<link rel="stylesheet" href="./static/css/community.css"></link>
+
+<body>
+  <ul class="topnav">
+    <li><a class="logo" title="Home" href="./index.html"><img src="./static/res/logoCloudTranslatorSvg.svg"></a></li>
+    <li><a href="./index.html"><img src="./static/res/home-2-line-white.png" class="navbar-image">&nbsp;Home</a></li>
+    <li><a class="active" href="./community.html"><img src="./static/res/team-line.png" class="navbar-image">&nbsp;Community</a></li>
+    <li class="right"><a href="./about.html"><img src="./static/res/information-line.png" class="navbar-image">&nbsp;About</a></li>
+  </ul>
+
+  <!-- <div class="big-list">
+      {% for row in data %}
+      <details id="{{ row[4] }}" class="item {{ row[4] }}">
+              <summary>
+              <span class="complaints"><i class="ri-emotion-sad-line"></i>&nbsp&nbsp{{ row[5] }}</span>
+              <div> <strong>{{ row[0] }}:</strong>
+                <span id="fromText" class="fromText" name="fromText">{{ row[2] }}</span><br>
+                <strong>{{ row[1] }}:</strong> {{ row[3] }}
+              </div>
+              </summary>
+              <div class="possible-translations-area">
+                <textarea id="to_text_possible" class="to_text_possible" name="to_text_possible"></textarea>
+                <button id="possible-translations-button" class="button" onclick="sendQueryToDB2('{{ row[4] }}')">
+                  <i class="ri-send-plane-2-fill"></i>
+                </button>
+              </div>
+        </details>
+      {% endfor %}
+  </div> -->
+
+  <div class="big-list"></div>
+
+  <button id="get-new-data" class="button"><img src="./static/res/arrow-down-fill.png" class="button-image">
+  <img src="./static/res/arrow-down-fill-hover.png" class="button-hover-image">
+  </button>
+
+  <footer id="footer">
+    <span>
+      <p>
+        <a href="https://web.unipv.it/" class="aliceblue">Università degli Studi di Pavia</a>
+        <br>
+        Cloud Computing Project UNIPV © 2023
+      </p>
+    </span>
+  </footer>
+
+</body>
+
+<script type="module" src="./static/scripts/community.js"></script>
+</html>
