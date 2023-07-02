@@ -1,0 +1,30 @@
+[
+        {
+            "name": "${name}",
+            "image": "${repo}",
+            "cpu": 0,
+            "portMappings": [
+                {
+                    "name": "${name}-8081-tcp",
+                    "containerPort": 8081,
+                    "hostPort": 8081,
+                    "protocol": "tcp",
+                    "appProtocol": "http"
+                }
+            ],
+            "essential": true,
+            "environment": [],
+            "environmentFiles": [],
+            "mountPoints": [],
+            "volumesFrom": [],
+            "ulimits": [],
+            "logConfiguration": {
+                "logDriver": "awslogs",
+                "options": {
+                    "awslogs-group": "${logGroup}",
+                    "awslogs-region": "us-west-1",
+                    "awslogs-stream-prefix": "stream-ecs"
+                }
+            }
+        }
+]
