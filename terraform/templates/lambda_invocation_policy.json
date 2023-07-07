@@ -1,0 +1,10 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": "lambda:InvokeFunction",
+      "Resource": ["${arn_lambda1}", "${arn_lambda2}", "${arn_lambda3}", "${arn_lambda4}", "${arn_lambda5}"]
+    }
+  ]
+}
