@@ -3,6 +3,7 @@
 # Create a VPC
 resource "aws_vpc" "backend_vpc_west" {
   cidr_block = "11.0.0.0/16"
+  enable_dns_hostnames = true
 
   tags = {
     Name = "backend_vpc_west"
@@ -14,12 +15,14 @@ resource "aws_subnet" "public_backend_vpc_subnet1" {
   vpc_id                  = aws_vpc.backend_vpc_west.id
   cidr_block              = "11.0.1.0/24"
   availability_zone       = "us-west-1a"
+  map_public_ip_on_launch = true
 }
 
 resource "aws_subnet" "public_backend_vpc_subnet2" {
   vpc_id                  = aws_vpc.backend_vpc_west.id
   cidr_block              = "11.0.2.0/24"
   availability_zone       = "us-west-1b"
+  map_public_ip_on_launch = true
 }
 
 resource "aws_subnet" "private_backend_vpc_subnet1" {
@@ -58,6 +61,21 @@ resource "aws_route" "public_route" {
   destination_cidr_block = "0.0.0.0/0"
   gateway_id             = aws_internet_gateway.internet_gateway.id
 }
+
+#resource "aws_eip" "nat1_eip" {
+#  vpc = true
+#}
+#resource "aws_eip" "nat2_eip" {
+#  vpc = true
+#}
+#resource "aws_nat_gateway" "nat1_gateway" {
+#  allocation_id = aws_eip.nat1_eip.id
+#  subnet_id     = aws_subnet.private_backend_vpc_subnet1.id
+#}
+#resource "aws_nat_gateway" "nat2_gateway" {
+#  allocation_id = aws_eip.nat2_eip.id
+#  subnet_id     = aws_subnet.private_backend_vpc_subnet2.id
+#}
 
 # Create the Network Load Balancer
 resource "aws_lb" "network_load_balancer" {
