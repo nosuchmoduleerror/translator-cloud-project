@@ -28,22 +28,22 @@ resource "aws_ecs_service" "translate-service" {
 
    load_balancer {
     target_group_arn = aws_lb_target_group.translator_ecs_target_group.arn
-    container_name   = aws_ecr_repository.translator-ecr.name
+    container_name   = "translator_container"
     container_port   = 8081
   }
 }
 
-resource "aws_ecr_repository" "translator-ecr" {
+/*resource "aws_ecr_repository" "translator-ecr" {
   name                 = "translator-ecr"
   image_tag_mutability = "MUTABLE"
 
   image_scanning_configuration {
     scan_on_push = false
   }
-}
+}*/
 
 output "ecs-repo" {
-  value       = aws_ecr_repository.translator-ecr.name
+  value       = "483451515855.dkr.ecr.us-west-1.amazonaws.com/translator2-repo"
   description = "ECR Repository Name"
 }
 
@@ -55,6 +55,20 @@ resource "aws_iam_role" "ecs-task-exec" {
   assume_role_policy = templatefile("./templates/ECSRole.json", {})
 }
 
+resource "aws_iam_role_policy_attachment" "ecs-task-exec-policy-attachment" {
+  role       = aws_iam_role.ecs-task-exec.id
+
+  # Attach the first additional policy
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+}
+
+resource "aws_iam_role_policy_attachment" "ecs-task-exec-cloudwatch-policy-attachment" {
+  role       = aws_iam_role.ecs-task-exec.id
+
+  # Attach the first additional policy
+  policy_arn = "arn:aws:iam::aws:policy/CloudWatchFullAccess"
+}
+
 resource "aws_iam_policy" "ecr-policy" {
   name        = "ECRPolicy"
   description = ""
@@ -63,7 +77,7 @@ resource "aws_iam_policy" "ecr-policy" {
 }
 
 resource "aws_iam_role_policy_attachment" "ecs-task-role-policy-attachment1" {
-  role       = aws_iam_role.ecs-task-exec.name
+  role       = aws_iam_role.ecs-task-exec.id
   policy_arn = aws_iam_policy.ecr-policy.arn
 }
 
@@ -74,9 +88,18 @@ resource "aws_iam_role" "ecs-resources-access" {
   assume_role_policy = templatefile("./templates/ECSRole.json", {})
 }
 
-resource "aws_iam_role_policy_attachment" "ecs-resources-access-role-policy-attachment1" {
-  role       = aws_iam_role.ecs-resources-access.name
-  policy_arn = aws_iam_policy.ecr-policy.arn
+resource "aws_iam_role_policy_attachment" "ecs-cli-policy-attachment" {
+  role       = aws_iam_role.ecs-resources-access.id
+
+  # Attach the first additional policy
+  policy_arn = "arn:aws:iam::483451515855:policy/ECS-for-CLI-Exec"
+}
+
+resource "aws_iam_role_policy_attachment" "ecs-resources-full-access-policy-attachment" {
+  role       = aws_iam_role.ecs-resources-access.id
+
+  # Attach the first additional policy
+  policy_arn = "arn:aws:iam::aws:policy/AmazonECS_FullAccess"
 }
 
 /* Definition ecs task with different sizes for different workloads */
@@ -84,7 +107,7 @@ resource "aws_iam_role_policy_attachment" "ecs-resources-access-role-policy-atta
 /* Medium*/
 resource "aws_ecs_task_definition" "ecs-task-definition-medium" {
   family                = "translator-medium"
-  container_definitions = templatefile("./templates/ContainerConf.json", { name = "${aws_ecr_repository.translator-ecr.name}", repo = "${aws_ecr_repository.translator-ecr.repository_url}", logGroup = "${aws_cloudwatch_log_group.ECSLogGroup.name}" })
+  container_definitions = templatefile("./templates/ContainerConf.json", { name = "translator_container", repo = "483451515855.dkr.ecr.us-west-1.amazonaws.com/translator2-repo:latest", logGroup = "${aws_cloudwatch_log_group.ECSLogGroup.name}" })
 
   task_role_arn      = aws_iam_role.ecs-resources-access.arn
   execution_role_arn = aws_iam_role.ecs-task-exec.arn
@@ -96,7 +119,7 @@ resource "aws_ecs_task_definition" "ecs-task-definition-medium" {
 
   runtime_platform {
     operating_system_family = "LINUX"
-    cpu_architecture        = "X86_64"
+    cpu_architecture        = "ARM64"
   }
 
   tags = {
@@ -110,7 +133,7 @@ resource "aws_ecs_task_set" "translator-task-set" {
   cluster         = aws_ecs_cluster.ecs-cluster.id
   task_definition = aws_ecs_task_definition.ecs-task-definition-medium.arn
   launch_type     = "FARGATE"
-
+  /* wait_until_stable = true # is this necessary? it could solve the empty output problem but no guarantees are given*/
 
   /* load_balancer {
     target_group_arn = aws_lb_target_group.example.arn
@@ -120,7 +143,7 @@ resource "aws_ecs_task_set" "translator-task-set" {
 }
 
 resource "aws_cloudwatch_log_group" "ECSLogGroup" {
-  name              = "/aws/ecs/${aws_ecr_repository.translator-ecr.name}"
+  name              = "/aws/ecs/translator_container"
   retention_in_days = 90
 
   tags = {
