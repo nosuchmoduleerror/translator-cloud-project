@@ -16,6 +16,10 @@ resource "aws_subnet" "public_backend_vpc_subnet1" {
   cidr_block              = "11.0.1.0/24"
   availability_zone       = "us-west-1a"
   map_public_ip_on_launch = true
+
+  tags = {
+    Name = "public_backend_vpc_subnet1"
+  }
 }
 
 resource "aws_subnet" "public_backend_vpc_subnet2" {
@@ -23,6 +27,10 @@ resource "aws_subnet" "public_backend_vpc_subnet2" {
   cidr_block              = "11.0.2.0/24"
   availability_zone       = "us-west-1b"
   map_public_ip_on_launch = true
+
+  tags = {
+    Name = "public_backend_vpc_subnet2"
+  }
 }
 
 resource "aws_subnet" "private_backend_vpc_subnet1" {
@@ -30,6 +38,10 @@ resource "aws_subnet" "private_backend_vpc_subnet1" {
   cidr_block              = "11.0.3.0/24"
   availability_zone       = "us-west-1a"
   map_public_ip_on_launch = false
+
+  tags = {
+    Name = "private_backend_vpc_subnet1"
+  }
 }
 
 resource "aws_subnet" "private_backend_vpc_subnet2" {
@@ -37,6 +49,10 @@ resource "aws_subnet" "private_backend_vpc_subnet2" {
   cidr_block              = "11.0.4.0/24"
   availability_zone       = "us-west-1b"
   map_public_ip_on_launch = false
+
+  tags = {
+    Name = "private_backend_vpc_subnet2"
+  }
 }
 
 # Create an Internet Gateway and attach it to the VPC
@@ -60,6 +76,16 @@ resource "aws_route" "public_route" {
   route_table_id         = aws_route_table.public_route_table.id
   destination_cidr_block = "0.0.0.0/0"
   gateway_id             = aws_internet_gateway.internet_gateway.id
+}
+
+resource "aws_route_table_association" "public1" {
+  subnet_id      = aws_subnet.public_backend_vpc_subnet1.id
+  route_table_id = aws_route_table.public_route_table.id
+}
+
+resource "aws_route_table_association" "public2" {
+  subnet_id      = aws_subnet.public_backend_vpc_subnet2.id
+  route_table_id = aws_route_table.public_route_table.id
 }
 
 #resource "aws_eip" "nat1_eip" {
@@ -102,13 +128,13 @@ resource "aws_lb_target_group" "translator_ecs_target_group" {
 
 # Register target instances with the Network Load Balancer target group (replace with your own target instance IDs)
 resource "aws_lb_target_group_attachment" "alb_target_attachment" {
-  port             = 8081
+  port             = aws_lb_listener.alb_listener.port
   target_group_arn = aws_lb_target_group.alb_target_group.arn
   target_id        = aws_lb.application_load_balancer.arn
 }
 
 #resource "aws_lb_target_group_attachment" "translator_ecs_target_attachment" {
-#  port             = 8081
+#  port             = aws_lb_listener.nlb_listener.port
 #  target_group_arn = aws_lb_target_group.translator_ecs_target_group.arn
 #  target_id        = aws_instance.isdns.id
 #}
