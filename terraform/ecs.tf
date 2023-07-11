@@ -16,7 +16,7 @@ resource "aws_ecs_service" "translate-service" {
   name            = "translate-service"
   cluster         = aws_ecs_cluster.ecs-cluster.id
   task_definition = aws_ecs_task_definition.ecs-task-definition-medium.arn
-  desired_count   = 2
+  desired_count   = 1
   depends_on      = [aws_iam_role_policy_attachment.ecs-task-role-policy-attachment1]
   health_check_grace_period_seconds = 2147483647
   launch_type = "FARGATE"

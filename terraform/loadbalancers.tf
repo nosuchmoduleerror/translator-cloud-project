@@ -55,6 +55,59 @@ resource "aws_subnet" "private_backend_vpc_subnet2" {
   }
 }
 
+## ENDPOINTS################################
+
+resource "aws_vpc_endpoint" "s3-endpoint1" {
+  vpc_id       = aws_vpc.backend_vpc_west.id
+  service_name = "com.amazonaws.us-west-1.s3"
+  vpc_endpoint_type = "Gateway"
+  route_table_ids = [aws_route_table.private_route_table.id]
+} 
+resource "aws_vpc_endpoint" "s3-endpoint2" {
+  vpc_id       = aws_vpc.backend_vpc_west.id
+  service_name = "com.amazonaws.us-west-1.s3"
+  vpc_endpoint_type = "Interface"
+  subnet_ids = [aws_subnet.private_backend_vpc_subnet1.id, aws_subnet.private_backend_vpc_subnet2.id]
+} 
+resource "aws_vpc_endpoint" "s3-endpoint3" {
+  vpc_id       = aws_vpc.backend_vpc_west.id
+  service_name = "com.amazonaws.s3-global.accesspoint"
+  vpc_endpoint_type = "Interface"
+  subnet_ids = [aws_subnet.private_backend_vpc_subnet1.id, aws_subnet.private_backend_vpc_subnet2.id]
+} 
+resource "aws_vpc_endpoint" "ecr-endpoint1" {
+  vpc_id       = aws_vpc.backend_vpc_west.id
+  service_name = "com.amazonaws.us-west-1.ecr.api"
+  vpc_endpoint_type = "Interface"
+  subnet_ids = [aws_subnet.private_backend_vpc_subnet1.id, aws_subnet.private_backend_vpc_subnet2.id]
+} 
+resource "aws_vpc_endpoint" "ecr-endpoint2" {
+  vpc_id       = aws_vpc.backend_vpc_west.id
+  service_name = "com.amazonaws.us-west-1.ecr.dkr"
+  vpc_endpoint_type = "Interface"
+  subnet_ids = [aws_subnet.private_backend_vpc_subnet1.id, aws_subnet.private_backend_vpc_subnet2.id]
+} 
+resource "aws_vpc_endpoint" "secretmanager-endpoint" {
+  vpc_id       = aws_vpc.backend_vpc_west.id
+  service_name = "com.amazonaws.us-west-1.secretsmanager"
+  vpc_endpoint_type = "Interface"
+  subnet_ids = [aws_subnet.private_backend_vpc_subnet1.id, aws_subnet.private_backend_vpc_subnet2.id]
+} 
+resource "aws_vpc_endpoint" "logs-endpoint" {
+  vpc_id       = aws_vpc.backend_vpc_west.id
+  service_name = "com.amazonaws.us-west-1.logs"
+  vpc_endpoint_type = "Interface"
+  subnet_ids = [aws_subnet.private_backend_vpc_subnet1.id, aws_subnet.private_backend_vpc_subnet2.id]
+} 
+resource "aws_vpc_endpoint" "ssm-endpoint" {
+  vpc_id       = aws_vpc.backend_vpc_west.id
+  service_name = "com.amazonaws.us-west-1.ssmmessages"
+  vpc_endpoint_type = "Interface"
+  subnet_ids = [aws_subnet.private_backend_vpc_subnet1.id, aws_subnet.private_backend_vpc_subnet2.id]
+}
+
+################################
+
 # Create an Internet Gateway and attach it to the VPC
 resource "aws_internet_gateway" "internet_gateway" {
   vpc_id = aws_vpc.backend_vpc_west.id
@@ -65,10 +118,24 @@ resource "aws_route_table" "public_route_table" {
   vpc_id = aws_vpc.backend_vpc_west.id
 }
 
+resource "aws_route_table" "private_route_table" {
+  vpc_id = aws_vpc.backend_vpc_west.id
+}
+
 # Create a route table association for the public subnet
 resource "aws_route_table_association" "public_association" {
   subnet_id      = aws_subnet.public_backend_vpc_subnet1.id
   route_table_id = aws_route_table.public_route_table.id
+}
+
+resource "aws_route_table_association" "private_association_1" {
+  subnet_id      = aws_subnet.private_backend_vpc_subnet1.id
+  route_table_id = aws_route_table.private_route_table.id
+}
+
+resource "aws_route_table_association" "private_association_2" {
+  subnet_id      = aws_subnet.private_backend_vpc_subnet2.id
+  route_table_id = aws_route_table.private_route_table.id
 }
 
 # Create a default route in the public route table that points to the Internet Gateway
@@ -77,6 +144,13 @@ resource "aws_route" "public_route" {
   destination_cidr_block = "0.0.0.0/0"
   gateway_id             = aws_internet_gateway.internet_gateway.id
 }
+
+/* resource "aws_route" "private_route" {
+  route_table_id         = aws_route_table.private_route_table.id
+  destination_prefix_list_id = "pl-6ba54002"
+  vpc_endpoint_id = aws_vpc_endpoint.s3-endpoint1.id
+}
+ */
 
 resource "aws_route_table_association" "public1" {
   subnet_id      = aws_subnet.public_backend_vpc_subnet1.id
