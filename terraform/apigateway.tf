@@ -816,6 +816,14 @@ resource "aws_api_gateway_deployment" "apigateway-deployment" {
     aws_api_gateway_integration.vote-possible-better-translation-options-integration,
     aws_api_gateway_integration_response.vote-possible-better-translation-options-integration-response,
     aws_api_gateway_method_response.vote-possible-better-translation-options-method-response,
+
+    aws_api_gateway_method.translate-api-method,
+    aws_api_gateway_integration.translate-api-integration,
+    aws_api_gateway_method_response.translate-api-method-response,
+    aws_api_gateway_method.translate-api-options-method,
+    aws_api_gateway_integration.translate-api-options-integration,
+    aws_api_gateway_integration_response.translate-api-options-integration-response,
+    aws_api_gateway_method_response.translate-api-options-method-response
   ]
   rest_api_id = aws_api_gateway_rest_api.rest-apigateway.id
 

@@ -23,10 +23,11 @@ resource "aws_ecs_service" "translate-service" {
 
   network_configuration {
     security_groups = [aws_security_group.translator_ecs_security_group.id]
-    subnets         = [aws_subnet.private_backend_vpc_subnet1.id, aws_subnet.private_backend_vpc_subnet2.id]
+    subnets         = [aws_subnet.public_backend_vpc_subnet1.id, aws_subnet.public_backend_vpc_subnet2.id]
+    assign_public_ip = true
   }
 
-   load_balancer {
+  load_balancer {
     target_group_arn = aws_lb_target_group.translator_ecs_target_group.arn
     container_name   = "translator_container"
     container_port   = 8081
@@ -128,19 +129,26 @@ resource "aws_ecs_task_definition" "ecs-task-definition-medium" {
   }
 }
 
-resource "aws_ecs_task_set" "translator-task-set" {
+/* resource "aws_ecs_task_set" "translator-task-set" {
   service         = aws_ecs_service.translate-service.id
   cluster         = aws_ecs_cluster.ecs-cluster.id
   task_definition = aws_ecs_task_definition.ecs-task-definition-medium.arn
   launch_type     = "FARGATE"
-  /* wait_until_stable = true # is this necessary? it could solve the empty output problem but no guarantees are given*/
+
+  #wait_until_stable = true # is this necessary? it could solve the empty output problem but no guarantees are given*/
 
   /* load_balancer {
     target_group_arn = aws_lb_target_group.example.arn
     container_name   = "mongo"
     container_port   = 8080
-  } */
-}
+  } 
+
+  network_configuration {
+    subnets          = [aws_subnet.public_backend_vpc_subnet1.id, aws_subnet.public_backend_vpc_subnet2.id]
+    security_groups  = [aws_security_group.translator_ecs_security_group.id]
+    assign_public_ip = true
+  }
+} */
 
 resource "aws_cloudwatch_log_group" "ECSLogGroup" {
   name              = "/aws/ecs/translator_container"
