@@ -154,8 +154,12 @@ resource "aws_cloudfront_distribution" "www_s3_distribution" {
 }
 
 #Route53 resources
+resource "aws_route53_zone" "translator-route53-zone" {
+  name = "cloud-translator.com2"
+}
+
 resource "aws_route53_record" "translator-cloudfront-www-ipv4" {
-  zone_id = "Z0188147J6F7IP73EADL"
+  zone_id = aws_route53_zone.translator-route53-zone.id
   name    = "cloud-translator.com"
   type    = "A"
 

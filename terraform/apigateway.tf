@@ -107,9 +107,9 @@ resource "aws_api_gateway_integration_response" "insert-bad-translation-post-met
     "method.response.header.Access-Control-Allow-Origin" = "'*'"
   }
 
-  response_templates = {
-    "application/json" = "Empty"
-  }
+#  response_templates = {
+#    "application/json" = "Empty"
+#  }
 
   depends_on = [
     aws_api_gateway_method.insert-bad-translation-post-method,
@@ -224,9 +224,9 @@ resource "aws_api_gateway_integration_response" "insert-possible-better-translat
     "method.response.header.Access-Control-Allow-Origin" = "'*'"
   }
 
-  response_templates = {
-    "application/json" = "Empty"
-  }
+#  response_templates = {
+#    "application/json" = "Empty"
+#  }
 
   depends_on = [
     aws_api_gateway_method.insert-possible-better-translation-post-method,
@@ -341,9 +341,9 @@ resource "aws_api_gateway_integration_response" "read-bad-translation-post-metho
     "method.response.header.Access-Control-Allow-Origin" = "'*'"
   }
 
-  response_templates = {
-    "application/json" = "Empty"
-  }
+#  response_templates = {
+#    "application/json" = "Empty"
+#  }
 
   depends_on = [
     aws_api_gateway_method.read-bad-translation-post-method,
@@ -458,9 +458,9 @@ resource "aws_api_gateway_integration_response" "read-possible-better-translatio
     "method.response.header.Access-Control-Allow-Origin" = "'*'"
   }
 
-  response_templates = {
-    "application/json" = "Empty"
-  }
+#  response_templates = {
+#    "application/json" = "Empty"
+#  }
 
   depends_on = [
     aws_api_gateway_method.read-possible-better-translation-post-method,
@@ -681,9 +681,9 @@ resource "aws_api_gateway_integration_response" "vote-possible-better-translatio
     "method.response.header.Access-Control-Allow-Origin" = "'*'"
   }
 
-  response_templates = {
-    "application/json" = "Empty"
-  }
+#  response_templates = {
+#    "application/json" = "Empty"
+#  }
 
   depends_on = [
     aws_api_gateway_method.vote-possible-better-translation-post-method,
