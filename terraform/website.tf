@@ -14,18 +14,26 @@ resource "aws_s3_bucket_policy" "bucket_policy" {
   policy = templatefile("./templates/bucket_policy.json", { aws_principal = "${aws_cloudfront_origin_access_identity.CFOAI.iam_arn}", action = "s3:GetObject", resource_arn = "${aws_s3_bucket.translator_bucket.arn}/*" })
 }
 
-//resource "aws_s3_bucket_acl" "translator_website_bucket_acl" {
-//  bucket = aws_s3_bucket.translator_bucket.id
-//  acl    = "private"
-//}
+resource "aws_s3_bucket_ownership_controls" "s3_bucket_acl_ownership" {
+  bucket = aws_s3_bucket.translator_bucket.id
+  rule {
+    object_ownership = "BucketOwnerPreferred"
+  }
+}
 
-resource "aws_s3_bucket_public_access_block" "wwwAccessBlock" {
+resource "aws_s3_bucket_acl" "translator_website_bucket_acl" {
+  bucket = aws_s3_bucket.translator_bucket.id
+  acl    = "public-read"
+  depends_on = [aws_s3_bucket_public_access_block.translateAccessBlock, aws_s3_bucket_ownership_controls.s3_bucket_acl_ownership]
+}
+
+resource "aws_s3_bucket_public_access_block" "translateAccessBlock" {
   bucket = aws_s3_bucket.translator_bucket.id
 
-  block_public_acls       = true
-  block_public_policy     = true
-  restrict_public_buckets = true
-  ignore_public_acls      = true
+  block_public_acls       = false
+  block_public_policy     = false
+  restrict_public_buckets = false
+  ignore_public_acls      = false
 }
 
 resource "aws_s3_bucket_website_configuration" "translator_website_bucket_bucketWebConfig" {
@@ -49,17 +57,6 @@ resource "aws_s3_bucket_cors_configuration" "translator_website_bucket_bucketCOR
   }
 }
 
-
-//# Upload website files from web-interface folder        //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ MODIFY PART OF API GATEWAY (I.E. 56,57,58,70,71,72 )
-//resource "aws_s3_object" "website_files" {
-//  for_each     = fileset("../src/website/", "**")
-//  bucket       = aws_s3_bucket.translator_bucket.id
-//  key          = replace(each.value, "../src/website", "")
-//  source       = "../src/website/${each.value}"
-//  etag         = filemd5("../src/website/${each.value}")
-//  //content_type = lookup(local.mime_types, regex("\\.[^.]+$", each.value), null)
-//}
-
 resource "aws_s3_object" "website_files" {
   for_each     = fileset("./website/", "**")
   bucket       = aws_s3_bucket.translator_bucket.id
@@ -69,16 +66,6 @@ resource "aws_s3_object" "website_files" {
   //content_type = lookup(local.mime_types, regex("\\.[^.]+$", each.value), null)
 }
 
-
-//resource "aws_s3_object" "website_json_file" { //upload json file with api invoke url, cannot be combined with above resource
-//  bucket       = aws_s3_bucket.translator_bucket.id
-//  key          = replace(local_file.output-json.filename, "../src/website", "")
-//  source       = local_file.output-json.filename
-//  etag         = md5(local_file.output-json.content)
-//  content_type = "application/json"
-//}
-
-
 # CLOUDFRONT
 resource "aws_cloudfront_origin_access_identity" "CFOAI" {
   comment = "S3 OAI"
@@ -87,16 +74,16 @@ resource "aws_cloudfront_origin_access_identity" "CFOAI" {
 resource "aws_cloudfront_distribution" "www_s3_distribution" {
   origin {
     domain_name = aws_s3_bucket.translator_bucket.bucket_domain_name
-    origin_id   = "S3-cloud-translator.com"
+    origin_id   = aws_s3_bucket.translator_bucket.id
 
-    origin_shield {
-      enabled              = true
-      origin_shield_region = "us-east-1"
-    }
+#    origin_shield {
+#      enabled              = false
+#      origin_shield_region = "us-east-1"
+#    }
 
-    s3_origin_config {
-      origin_access_identity = aws_cloudfront_origin_access_identity.CFOAI.cloudfront_access_identity_path
-    }
+#    s3_origin_config {
+#      origin_access_identity = aws_cloudfront_origin_access_identity.CFOAI.cloudfront_access_identity_path
+#    }
   }
   enabled             = true
   is_ipv6_enabled     = true
@@ -118,7 +105,7 @@ resource "aws_cloudfront_distribution" "www_s3_distribution" {
   default_cache_behavior {
     allowed_methods  = ["GET", "HEAD"]
     cached_methods   = ["GET", "HEAD"]
-    target_origin_id = "S3-cloud-translator.com"
+    target_origin_id = aws_s3_bucket.translator_bucket.id
 
     forwarded_values {
       query_string = false
