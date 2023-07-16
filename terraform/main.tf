@@ -11,7 +11,7 @@ terraform {
   cloud {
     organization = "cloud-translator-unipv"
     workspaces {
-      name = "cloud-translator-local-workspace"
+      name = "translator-cloud-LATEST"
     }
   }
 }
@@ -47,12 +47,12 @@ output "region" {
 
 
 resource "aws_iam_role" "lambda_role" {
-  name   = "lambda_function_Role"
+  name   = "lambda_function_Role1"
   assume_role_policy = templatefile("./templates/lambda_role.json", {})
 }
 
 resource "aws_iam_policy" "iam_policy_for_lambda" {
-  name         = "aws_iam_policy_for_terraform_aws_lambda_role"
+  name         = "aws_iam_policy_for_terraform_aws_lambda_role1"
   path         = "/"
   description  = "AWS IAM Policy for managing aws lambda role"
   policy = <<EOF

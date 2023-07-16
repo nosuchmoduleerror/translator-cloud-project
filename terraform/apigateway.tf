@@ -2,7 +2,7 @@
 
 /* API GATEWAY POLICY */
 resource "aws_iam_policy" "apigateway-lambda-policy" {
-  name = "translator-api-gateway-policy"
+  name = "translator-api-gateway-policy1"
 
   policy = templatefile("./templates/lambda_invocation_policy.json", {
     arn_lambda1 = aws_lambda_function.insert-bad-translation.arn,
@@ -14,13 +14,13 @@ resource "aws_iam_policy" "apigateway-lambda-policy" {
 
 /* API GATEWAY IAM ROLE */
 resource "aws_iam_role" "apigateway-role" {
-  name = "apigateway-role"
+  name = "apigateway-role1"
 
   assume_role_policy = templatefile("./templates/api_gateway_role.json", {})
 }
 
 resource "aws_iam_policy" "apigateway-cloudwatch-policy" {
-  name        = "translator-logger"
+  name        = "translator-logger1"
   description = "IAM policy for API Gateway logging to Cloudwatch"
   path        = "/"
 

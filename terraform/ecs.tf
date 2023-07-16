@@ -29,7 +29,7 @@ resource "aws_ecs_service" "translate-service" {
 
   load_balancer {
     target_group_arn = aws_lb_target_group.translator_ecs_target_group.arn
-    container_name   = "translator_container"
+    container_name   = "translator_container1"
     container_port   = 8081
   }
 }
@@ -50,7 +50,7 @@ output "ecs-repo" {
 
 /* Role for ECS task definition */
 resource "aws_iam_role" "ecs-task-exec" {
-  name        = "ecs-task-execution-role-v2"
+  name        = "ecs-task-execution-role-v3"
   description = "Allows the execution of ECS tasks"
 
   assume_role_policy = templatefile("./templates/ECSRole.json", {})
@@ -71,7 +71,7 @@ resource "aws_iam_role_policy_attachment" "ecs-task-exec-cloudwatch-policy-attac
 }
 
 resource "aws_iam_policy" "ecr-policy" {
-  name        = "ECRPolicy"
+  name        = "ECRPolicy1"
   description = ""
 
   policy = templatefile("./templates/ECRPermissions.json", {})
@@ -83,7 +83,7 @@ resource "aws_iam_role_policy_attachment" "ecs-task-role-policy-attachment1" {
 }
 
 resource "aws_iam_role" "ecs-resources-access" {
-  name        = "ecs-resources-access"
+  name        = "ecs-resources-access1"
   description = "Allows ECS tasks to call AWS services on your behalf"
 
   assume_role_policy = templatefile("./templates/ECSRole.json", {})
@@ -108,7 +108,7 @@ resource "aws_iam_role_policy_attachment" "ecs-resources-full-access-policy-atta
 /* Medium*/
 resource "aws_ecs_task_definition" "ecs-task-definition-medium" {
   family                = "translator-medium"
-  container_definitions = templatefile("./templates/ContainerConf.json", { name = "translator_container", repo = "483451515855.dkr.ecr.us-west-1.amazonaws.com/translator2-repo:latest", logGroup = "${aws_cloudwatch_log_group.ECSLogGroup.name}" })
+  container_definitions = templatefile("./templates/ContainerConf.json", { name = "translator_container1", repo = "483451515855.dkr.ecr.us-west-1.amazonaws.com/translator2-repo:latest", logGroup = "${aws_cloudwatch_log_group.ECSLogGroup.name}" })
 
   task_role_arn      = aws_iam_role.ecs-resources-access.arn
   execution_role_arn = aws_iam_role.ecs-task-exec.arn
@@ -151,7 +151,7 @@ resource "aws_ecs_task_definition" "ecs-task-definition-medium" {
 } */
 
 resource "aws_cloudwatch_log_group" "ECSLogGroup" {
-  name              = "/aws/ecs/translator_container"
+  name              = "/aws/ecs/translator_container1"
   retention_in_days = 90
 
   tags = {

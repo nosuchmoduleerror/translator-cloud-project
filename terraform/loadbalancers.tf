@@ -179,7 +179,7 @@ resource "aws_route_table_association" "public2" {
 
 # Create the Network Load Balancer
 resource "aws_lb" "network_load_balancer" {
-  name               = "network-load-balancer"
+  name               = "network-load-balancer1"
   load_balancer_type = "network"
   subnets            = [aws_subnet.private_backend_vpc_subnet1.id, aws_subnet.private_backend_vpc_subnet2.id]
 }
