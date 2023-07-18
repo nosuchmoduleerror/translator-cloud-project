@@ -4,7 +4,7 @@ on:
     branches:
       - master
     paths:
-      - 'src/website/**'
+      - 'terraform/website/**'
 
 jobs:
   run:
