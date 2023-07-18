@@ -25,7 +25,7 @@ jobs:
         python3 install-language-models.py -f en -t it -txt "Hello World"
         python3 install-language-models.py -f it -t en -txt "Ciao Mondo"
         pytest ./test_translate.py
-      working-directory: ${github.workspace}/.github/workflows/tests/
+      working-directory: .github/workflows/tests/
     
     - name: Build Docker image
       id: build-translator-image
