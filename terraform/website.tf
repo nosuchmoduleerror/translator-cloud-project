@@ -71,7 +71,7 @@ resource "aws_cloudfront_origin_access_identity" "CFOAI" {
   comment = "S3 OAI"
 }
 
-resource "aws_cloudfront_distribution" "www_s3_distribution" {
+resource "aws_cloudfront_distribution" "translator_s3_distribution" {
   origin {
     domain_name = aws_s3_bucket.translator_bucket.bucket_domain_name
     origin_id   = aws_s3_bucket.translator_bucket.id
@@ -145,14 +145,14 @@ resource "aws_route53_zone" "translator-route53-zone" {
   name = "cloud-translator.com2"
 }
 
-resource "aws_route53_record" "translator-cloudfront-www-ipv4" {
+resource "aws_route53_record" "translator-cloudfront-translator-ipv4" {
   zone_id = aws_route53_zone.translator-route53-zone.id
   name    = "cloud-translator.com"
   type    = "A"
 
   alias {
-    name                   = aws_cloudfront_distribution.www_s3_distribution.domain_name
-    zone_id                = aws_cloudfront_distribution.www_s3_distribution.hosted_zone_id
+    name                   = aws_cloudfront_distribution.translator_s3_distribution.domain_name
+    zone_id                = aws_cloudfront_distribution.translator_s3_distribution.hosted_zone_id
     evaluate_target_health = true
   }
 }

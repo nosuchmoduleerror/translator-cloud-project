@@ -17,6 +17,15 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v3
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pytest agostranslate argparse
+        python3 install-language-models.py -f en -t it -txt "Hello World"
+        python3 install-language-models.py -f it -t en -txt "Ciao Mondo"
+        pytest ./test_translate.py
+      working-directory: ${github.workspace}/.github/workflows/tests/
     
     - name: Build Docker image
       id: build-translator-image
