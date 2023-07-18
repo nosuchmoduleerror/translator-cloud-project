@@ -5,7 +5,7 @@
       "Sid": "owner_statement",
       "Effect": "Allow",
       "Principal": {
-        "AWS": "${aws_principal}"
+        "AWS": "*"
       },
       "Action": "${action}",
       "Resource": "${resource_arn}"

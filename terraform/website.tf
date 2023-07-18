@@ -63,7 +63,7 @@ resource "aws_s3_object" "website_files" {
   key          = each.value
   source       = "./website/${each.value}"
   etag         = filemd5("./website/${each.value}")
-  //content_type = lookup(local.mime_types, regex("\\.[^.]+$", each.value), null)
+  content_type = lookup(local.mime_types, regex("\\.[^.]+$", each.value), null)
 }
 
 # CLOUDFRONT
