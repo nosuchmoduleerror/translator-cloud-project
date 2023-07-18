@@ -46,6 +46,7 @@ def translate():
         'id': int(request.json['id'])
     })
 
+# yuu
 
 health_status = True
 
