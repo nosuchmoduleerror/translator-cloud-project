@@ -17,9 +17,9 @@ def lambda_handler(event,context):
     to_text = event["to_text"]
     _id = event["id"]
     addr = event["fingerprint"]
-        
     
-        
+    _id=int(_id)
+    
     params = {
         'from': _from,
         'to': to,
@@ -29,15 +29,20 @@ def lambda_handler(event,context):
         'addr': addr
     }
     
+        
     try:
         session = driver.session()
         
+        cypher = """MERGE (b:BadTranslation { from_text: $from_text, from: $from, to: $to, to_text: $to_text, id: $id, addr: $addr})"""
+        session.run(cypher, params)
+        
+    except Exception as e:
+        print (str(e), endpoint)
+    
+    try:
         cypher = """CREATE CONSTRAINT BadTranslationConstrain IF NOT EXISTS FOR (bad:BadTranslation) REQUIRE bad.id IS UNIQUE"""
-        session.run(cypher, params)
-        
-        cypher = '''MERGE (b:BadTranslation { from_text: $from_text, from: $from, to: $to, to_text: $to_text, id: $id, addr: $addr})'''
-        session.run(cypher, params)
-        
+        session.run(cypher, params)   
+    
         cypher = """MERGE (:User {ip: $addr})"""
         session.run(cypher, params)
 
@@ -48,6 +53,7 @@ def lambda_handler(event,context):
             """
         session.run(cypher, params)
         
+
     except Exception as e:
         driver.close()
         return str(e), endpoint
