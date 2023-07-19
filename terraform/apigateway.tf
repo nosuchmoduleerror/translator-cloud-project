@@ -12,7 +12,7 @@ resource "aws_iam_policy" "apigateway-lambda-policy" {
     arn_lambda5 = aws_lambda_function.vote-possible-better-translation.arn})
 }
 
-/* API GATEWAY IAM ROLE */
+/* API GATEWAY IAM ROLE  */
 resource "aws_iam_role" "apigateway-role" {
   name = "apigateway-role1"
 
