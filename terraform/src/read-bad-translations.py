@@ -22,8 +22,8 @@ def lambda_handler(event,context):
                     WITH b, count(u) as complaints
                     RETURN *
                     ORDER BY complaints DESC
-                    SKIP $page*2
-                    LIMIT 2
+                    SKIP $page*10
+                    LIMIT 10
                     """
         result = session.run(cypher, params)
         
