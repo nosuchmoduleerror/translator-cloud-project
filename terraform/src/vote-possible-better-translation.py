@@ -20,7 +20,6 @@ def lambda_handler(event,context):
         'ip': addr
     }
     
-    
     try:
         with driver.session() as session:
             
