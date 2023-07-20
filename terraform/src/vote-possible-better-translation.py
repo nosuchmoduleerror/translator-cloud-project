@@ -38,7 +38,7 @@ def lambda_handler(event,context):
            
 
             cypher = """ MATCH (bad:BadTranslation)-[:IMPROVED_BY]->(good:BetterTranslation)-[:PROPOSED_BY]->(u:User)
-                        WHERE good.id = $second_id 
+                        WHERE good.id = $id
                         WITH good, COUNT(u) as votes, bad
                         RETURN votes, bad.id, good.id
                     """
