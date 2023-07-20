@@ -10,7 +10,7 @@ resource "aws_s3_bucket" "translator_bucket" {
 }
 
 resource "aws_s3_bucket_policy" "bucket_policy" {
-  bucket = aws_s3_bucket.translator_bucket.arn
+  bucket = aws_s3_bucket.translator_bucket.id
   policy = templatefile("./templates/bucket_policy.json", { aws_principal = "${aws_cloudfront_origin_access_identity.CFOAI.iam_arn}", action = "s3:GetObject", resource_arn = "${aws_s3_bucket.translator_bucket.arn}/*" })
 }
 
